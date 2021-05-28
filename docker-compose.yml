@@ -49,6 +49,19 @@ services:
     depends_on:
       - db
 
+  bamboo:
+    container_name: bamboo
+    image: atlassian/bamboo-server:7
+    ports:
+      - "54663:54663"
+      - "8085:8085"
+    volumes:
+      - ~/volumes/atlassian/bamboo:/var/atlassian/application-data/bamboo
+    networks:
+      - devsecopsnet
+    depends_on:
+      - db
+
   jenkins:
     container_name: jenkins
     image: jenkins/jenkins:lts
@@ -87,6 +100,7 @@ services:
      - confluence 
      - bitbucket 
      - jenkins
+     - bamboo
      - nexus
     ports: 
      - "80:80" 
