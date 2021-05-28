@@ -1,0 +1,1 @@
+Execute the create-domain.sh file to generate domain certificates which will be automatically copied here.

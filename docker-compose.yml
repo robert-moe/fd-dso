@@ -8,9 +8,10 @@ services:
     volumes:
       - ~/volumes/atlassian/jira:/var/atlassian/application-data/jira
     environment:
-       ATL_PROXY_NAME: jira.fires.division
-       ATL_PROXY_PORT: 80
-       ATL_TOMCAT_SCHEME: http 
+       ATL_PROXY_NAME: jira.fd
+       ATL_PROXY_PORT: 443
+       ATL_TOMCAT_SCHEME: https
+       ATL_TOMCAT_SECURE: "true"
     networks:
       - devsecopsnet
     depends_on:
@@ -22,9 +23,10 @@ services:
     volumes:
       - ~/volumes/atlassian/confluence:/var/atlassian/application-data/confluence
     environment: 
-      ATL_PROXY_NAME: confluence.fires.division
-      ATL_PROXY_PORT: 80
-      ATL_TOMCAT_SCHEME: http
+      ATL_PROXY_NAME: confluence.fd
+      ATL_PROXY_PORT: 443
+      ATL_TOMCAT_SCHEME: https
+      ATL_TOMCAT_SECURE: "true"
     networks:
       - devsecopsnet
     depends_on:
@@ -38,9 +40,10 @@ services:
     volumes:
       - ~/volumes/atlassian/bitbucket:/var/atlassian/application-data/bitbucket
     environment: 
-      SERVER_PROXY_NAME: bitbucket.fires.division
-      SERVER_PROXY_PORT: 80
-      SERVER_SCHEME: http 
+      SERVER_PROXY_NAME: bitbucket.fd
+      SERVER_PROXY_PORT: 443
+      SERVER_SCHEME: https
+      SERVER_SECURE: "true"
     networks:
       - devsecopsnet
     depends_on:
@@ -51,29 +54,20 @@ services:
     image: jenkins/jenkins:lts
     volumes:
       - ~/volumes/jenkins/home:/var/jenkins_home
-    #ports:
-    #  - "8081:8081"
-    #  - "50000:50000"
     networks:
       - devsecopsnet  
-    #environment:
-    #  JENKINS_OPTS: --httpPort=8081
 
   nexus:
     container_name: nexus
     image: sonatype/nexus3:3.30.0
     volumes:
       - ~/volumes/nexus/nexus-data:/nexus-data
-    #ports:
-    #  - 8081:8081
     networks:
       - devsecopsnet
 
   db:
     container_name: postgres10
     image: postgres:10
-    #ports:
-    #  - "5432:5432"
     volumes:
       - ./config/postgres:/docker-entrypoint-initdb.d
       - ~/volumes/postgres/data/10:/var/lib/postgresql/data
@@ -87,6 +81,7 @@ services:
     image: nginx:1.17 
     volumes:
      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf 
+     - ./config/nginx/ssl/:/etc/nginx/ssl
     depends_on: 
      - jira 
      - confluence 
@@ -95,16 +90,9 @@ services:
      - nexus
     ports: 
      - "80:80" 
+     - "443:443"
     networks: 
-      devsecopsnet: 
-        aliases:
-         # Needed so that Jira/Confluence/Bitbucket can access itself within the docker network using those alias.
-         #  This needs to match what is manually entered in the /etc/hosts file of the Host OS (OSX, Linux, Windows...)
-         - jira.fires.division
-         - confluence.fires.division
-         - bitbucket.fires.division
-         - jenkins.fires.division
-         - nexus.fires.division
+     - devsecopsnet 
 
 networks:
   devsecopsnet:
