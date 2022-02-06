@@ -1,0 +1,18 @@
+tls:
+  certificates:
+    - certFile: /etc/traefik/certs/bitbucket.fires.division.crt
+      keyFile: /etc/traefik/certs/bitbucket.fires.division.key
+    - certFile: /etc/traefik/certs/confluence.fires.division.crt
+      keyFile: /etc/traefik/certs/confluence.fires.division.key
+    - certFile: /etc/traefik/certs/jenkins.fires.division.crt
+      keyFile: /etc/traefik/certs/jenkins.fires.division.key
+    - certFile: /etc/traefik/certs/jira.fires.division.crt
+      keyFile: /etc/traefik/certs/jira.fires.division.key
+    - certFile: /etc/traefik/certs/nexus.fires.division.crt
+      keyFile: /etc/traefik/certs/nexus.fires.division.key
+    - certFile: /etc/traefik/certs/nginx.fires.division.crt
+      keyFile: /etc/traefik/certs/nginx.fires.division.key
+    - certFile: /etc/traefik/certs/registry-1.fires.division.crt
+      keyFile: /etc/traefik/certs/registry-1.fires.division.key
+    - certFile: /etc/traefik/certs/repo.fires.division.crt
+      keyFile: /etc/traefik/certs/repo.fires.division.key

@@ -11,7 +11,7 @@ pass="devsecops"
 DOMAIN=$1
 
 openssl genrsa -out $DOMAIN.key 2048
-openssl req -new -key $DOMAIN.key -out $DOMAIN.csr -subj "/C=US/ST=Oklahoma/L=Fort Sill/O=CECOM SEC/OU=Fires Division/CN=$DOMAIN"
+openssl req -new -key $DOMAIN.key -out $DOMAIN.csr -subj "/C=US/ST=Oklahoma/L=Fort Sill/O=CECOM SEC/OU=Fires Division/CN=*.$DOMAIN/CN=$DOMAIN"
 
 cat > $DOMAIN.ext << EOF
 authorityKeyIdentifier=keyid,issuer
