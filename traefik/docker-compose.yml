@@ -85,13 +85,10 @@ services:
     environment:
       ATL_PROXY_NAME: jira.fires.division
       #ATL_PROXY_PORT: 8080
-
-
-
       #ATL_TOMCAT_SCHEME: http 
       ATL_PROXY_PORT: 8443
       ATL_TOMCAT_SCHEME: https
-      ATL_TOMCAT_SECURE: "true"
+      ATL_TOMCAT_SECURE: false
     networks:
       - traefik-proxy
     depends_on:
