@@ -1,3 +1,4 @@
-ssl/ca.*
-config/nginx/ssl/*.crt
-config/nginx/ssl/*.key
+
+**/*.crt
+**/*.key
+**/*.srl

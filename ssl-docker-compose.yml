@@ -6,13 +6,14 @@ services:
     container_name: jira
     image: atlassian/jira-software:8
     volumes:
-      - jira:/var/atlassian/application-data/jira
+      - jira-ssl:/var/atlassian/application-data/jira
     environment:
        ATL_PROXY_NAME: jira.fires.division
-       ATL_PROXY_PORT: 8080
-       ATL_TOMCAT_SCHEME: http 
+       ATL_PROXY_PORT: 443
+       ATL_TOMCAT_SCHEME: https
+       ATL_TOMCAT_SECURE: "true"
     networks:
-      - devsecopsnet
+      - devsecopsnet-ssl
     depends_on:
       - db
 
@@ -20,13 +21,14 @@ services:
     container_name: confluence
     image: atlassian/confluence-server:7
     volumes:
-      - confluence:/var/atlassian/application-data/confluence
+      - confluence-ssl:/var/atlassian/application-data/confluence
     environment: 
       ATL_PROXY_NAME: confluence.fires.division
-      ATL_PROXY_PORT: 8080
-      ATL_TOMCAT_SCHEME: http
+      ATL_PROXY_PORT: 443
+      ATL_TOMCAT_SCHEME: https
+      ATL_TOMCAT_SECURE: "true"
     networks:
-      - devsecopsnet
+      - devsecopsnet-ssl
     depends_on:
       - db
 
@@ -36,13 +38,14 @@ services:
     ports:
      - "7999:7999"
     volumes:
-      - bitbucket:/var/atlassian/application-data/bitbucket
+      - bitbucket-ssl:/var/atlassian/application-data/bitbucket
     environment: 
       SERVER_PROXY_NAME: bitbucket.fires.division
-      SERVER_PROXY_PORT: 8080
-      SERVER_SCHEME: http 
+      SERVER_PROXY_PORT: 443
+      SERVER_SCHEME: https
+      SERVER_SECURE: "true"
     networks:
-      - devsecopsnet
+      - devsecopsnet-ssl
     depends_on:
       - db
 
@@ -50,43 +53,35 @@ services:
     container_name: jenkins
     image: jenkins/jenkins:lts
     volumes:
-      - jenkins:/var/jenkins_home
-    #ports:
-    #  - "8081:8081"
-    #  - "50000:50000"
+      - jenkins-ssl:/var/jenkins_home
     networks:
-      - devsecopsnet  
-    #environment:
-    #  JENKINS_OPTS: --httpPort=8080
+      - devsecopsnet-ssl  
 
   nexus:
     container_name: nexus
     image: sonatype/nexus3:3.37.3
     volumes:
-      - nexus:/nexus-data
-    #ports:
-    #  - 8081:8081
+      - nexus-ssl:/nexus-data
     networks:
-      - devsecopsnet
+      - devsecopsnet-ssl
 
   db:
     container_name: postgres10
     image: postgres:10
-    #ports:
-    #  - "5432:5432"
     volumes:
-      - ./config/postgres:/docker-entrypoint-initdb.d
-      - postgres:/var/lib/postgresql/data
+      - ../config/postgres:/docker-entrypoint-initdb.d
+      - postgres-ssl:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: qwerQWER
     networks:
-      - devsecopsnet
+      - devsecopsnet-ssl
 
   nginx: 
     container_name: nginx 
     image: nginx:1.17 
     volumes:
      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf 
+     - ./config/nginx/ssl/:/etc/nginx/ssl
     depends_on: 
      - jira 
      - confluence 
@@ -94,18 +89,18 @@ services:
      - jenkins
      - nexus
     ports: 
-     - "8080:8080"
-    # - "8081:8081"
+     - "8090:8090" 
+     - "8443:8443"
     networks: 
-      - devsecopsnet
-         
+     - devsecopsnet-ssl 
+
 networks:
-  devsecopsnet:
+  devsecopsnet-ssl:
 
 volumes:
-  jira:
-  confluence:
-  bitbucket:
-  jenkins:
-  postgres:
-  nexus:
+  jira-ssl:
+  confluence-ssl:
+  bitbucket-ssl:
+  jenkins-ssl:
+  postgres-ssl:
+  nexus-ssl:
