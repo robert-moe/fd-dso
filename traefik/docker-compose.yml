@@ -1,0 +1,181 @@
+version: '3'
+
+services:
+
+  traefik:
+    container_name: traefik
+    image: traefik:v2.6
+    command:
+      #- --log.level=DEBUG
+      # Global
+      - --global.checknewversion=false
+      - --global.sendAnonymousUsage=false
+      # API
+      - --api
+      - --api.dashboard=true
+      - --api.insecure=true
+      - --api.debug=true
+      # Entrypoints
+      - --entrypoints.web.address=:8080
+      - --entrypoints.websecure.address=:8443
+      - --entrypoints.traefik.address=:8081
+      # Provider Info
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      # Certificate Resolver Info
+      #- --certificatesresolvers.le.acme.email=your@email.domain
+      #- --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
+      #- --certificatesresolvers.le.acme.tlschallenge=true
+    #labels:
+      # Middleware Redirect
+      #- "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      # Global HTTP -> HTTPS Redirect
+      #- "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
+      #- "traefik.http.routers.redirs.entrypoints=http"
+      #- "traefik.http.routers.redirs.middlewares=https-redirect"
+    ports:
+      # The HTTP port
+      - "8080:8080"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8081:8081"
+       # The HTTPS port
+      - "8443:8443"
+    volumes:
+      # - ./config/traefik:/etc/traefik
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik-proxy
+
+  nginx:
+    container_name: nginx 
+    image: nginx:1.17 
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ngnix.entrypoints=web
+      - traefik.http.routers.ngnix.rule=Host(`nginx.fires.division`)
+      - traefik.docker.network=traefik-proxy
+      # - traefik.http.services.ngnix.loadbalancer.server.port=80
+    networks:
+      - traefik-proxy
+
+  jira:
+    container_name: jira
+    image: atlassian/jira-software:8
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.jira.entrypoints=web
+      - traefik.http.routers.jira.rule=Host(`jira.fires.division`)
+      - traefik.http.services.jira.loadbalancer.server.port=8080
+      - traefik.docker.network=traefik-proxy
+    volumes:
+      - jira:/var/atlassian/application-data/jira
+    environment:
+       ATL_PROXY_NAME: jira.fires.division
+       ATL_PROXY_PORT: 8080
+       ATL_TOMCAT_SCHEME: http 
+    networks:
+      - traefik-proxy
+    depends_on:
+      - db
+
+  confluence:
+    container_name: confluence
+    image: atlassian/confluence-server:7
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.confluence.entrypoints=web
+      - traefik.http.routers.confluence.rule=Host(`confluence.fires.division`)
+      - traefik.http.services.confluence.loadbalancer.server.port=8090
+      - traefik.docker.network=traefik-proxy
+    volumes:
+      - confluence:/var/atlassian/application-data/confluence
+    environment: 
+      ATL_PROXY_NAME: confluence.fires.division
+      ATL_PROXY_PORT: 8080
+      ATL_TOMCAT_SCHEME: http
+    networks:
+       - traefik-proxy
+    depends_on:
+      - db
+
+  bitbucket:
+    container_name: bitbucket
+    image: atlassian/bitbucket-server:7
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.bitbucket.entrypoints=web
+      - traefik.http.routers.bitbucket.rule=Host(`bitbucket.fires.division`)
+      - traefik.http.services.bitbucket.loadbalancer.server.port=7990
+      - traefik.docker.network=traefik-proxy
+    ports:
+     - "7999:7999"
+    volumes:
+      - bitbucket:/var/atlassian/application-data/bitbucket
+    environment: 
+      SERVER_PROXY_NAME: bitbucket.fires.division
+      SERVER_PROXY_PORT: 8080
+      SERVER_SCHEME: http 
+    networks:
+      - traefik-proxy
+    depends_on:
+      - db
+
+  jenkins:
+    container_name: jenkins
+    image: jenkins/jenkins:lts
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.jenkins.entrypoints=web
+      - traefik.http.routers.jenkins.rule=Host(`jenkins.fires.division`)
+      - traefik.http.services.jenkins.loadbalancer.server.port=8080
+      - traefik.docker.network=traefik-proxy
+      # Middleware Redirect
+      #- traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+    volumes:
+      - jenkins:/var/jenkins_home
+    networks:
+      - traefik-proxy  
+
+  nexus:
+    container_name: nexus
+    image: sonatype/nexus3:3.37.3
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.nexus.entrypoints=web
+      - traefik.http.routers.nexus.rule=Host(`nexus.fires.division`)
+      - traefik.http.services.nexus.loadbalancer.server.port=8081
+      - traefik.docker.network=traefik-proxy  
+    volumes:
+      - nexus:/nexus-data
+    networks:
+      - traefik-proxy
+
+  db:
+    container_name: postgres10
+    image: postgres:10
+    volumes:
+      - ./config/postgres:/docker-entrypoint-initdb.d
+      - postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: qwerQWER
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external: true
+
+volumes:
+  jira:
+    external: true
+  confluence:
+    external: true
+  bitbucket:
+    external: true
+  jenkins:
+    external: true
+  postgres:
+    external: true
+  nexus:
+    external: true

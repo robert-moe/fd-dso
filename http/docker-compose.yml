@@ -104,8 +104,14 @@ networks:
 
 volumes:
   jira:
+    external: true
   confluence:
+    external: true
   bitbucket:
+    external: true
   jenkins:
+    external: true
   postgres:
+    external: true
   nexus:
+    external: true
