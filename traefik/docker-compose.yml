@@ -17,7 +17,12 @@ services:
       - --api.debug=true
       # Entrypoints
       - --entrypoints.web.address=:8080
+      # Redirect ALL HTTP traffic to HTTPS
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.web.http.redirections.entrypoint.permanent=true
       - --entrypoints.websecure.address=:8443
+      - --entrypoints.websecure.http.tls=true
       - --entrypoints.traefik.address=:8081
       # Provider Info
       - --providers.docker=true
@@ -27,14 +32,14 @@ services:
     labels:
       - traefik.enable=true
       # middleware redirect
-      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
-      - traefik.http.middlewares.redirect-to-https.redirectscheme.port=8443
-      - traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true
+      # - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+      # - traefik.http.middlewares.redirect-to-https.redirectscheme.port=8443
+      # - traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true
       # global redirect to https
-      - traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)
-      #- traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`)
-      - traefik.http.routers.http-catchall.entrypoints=web
-      - traefik.http.routers.http-catchall.middlewares=redirect-to-https
+      # - traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)
+      # - traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`)
+      # - traefik.http.routers.http-catchall.entrypoints=web
+      # - traefik.http.routers.http-catchall.middlewares=redirect-to-https
 
     ports:
       # The HTTP port
@@ -63,7 +68,7 @@ services:
       #- traefik.http.routers.ngnix.rule=Host(`nginx.fires.division`)
       - traefik.http.routers.ngnix-ssl.entrypoints=websecure
       - traefik.http.routers.ngnix-ssl.rule=Host(`nginx.fires.division`)
-      - traefik.http.routers.ngnix-ssl.tls=true
+      #- traefik.http.routers.ngnix-ssl.tls=true
       - traefik.http.services.ngnix.loadbalancer.server.port=80
     networks:
       - traefik-proxy
@@ -78,7 +83,7 @@ services:
       #- traefik.http.routers.jira.rule=Host(`jira.fires.division`)
       - traefik.http.routers.jira-ssl.entrypoints=websecure
       - traefik.http.routers.jira-ssl.rule=Host(`jira.fires.division`)
-      - traefik.http.routers.jira-ssl.tls=true
+      #- traefik.http.routers.jira-ssl.tls=true
       - traefik.http.services.jira.loadbalancer.server.port=8080
     volumes:
       - jira:/var/atlassian/application-data/jira
@@ -104,7 +109,7 @@ services:
       #- traefik.http.routers.confluence.rule=Host(`confluence.fires.division`)
       - traefik.http.routers.confluence-ssl.entrypoints=websecure
       - traefik.http.routers.confluence-ssl.rule=Host(`confluence.fires.division`)
-      - traefik.http.routers.confluence-ssl.tls=true
+      #- traefik.http.routers.confluence-ssl.tls=true
       - traefik.http.services.confluence.loadbalancer.server.port=8090
     volumes:
       - confluence:/var/atlassian/application-data/confluence
@@ -130,7 +135,7 @@ services:
       #- traefik.http.routers.bitbucket.rule=Host(`bitbucket.fires.division`)
       - traefik.http.routers.bitbucket-ssl.entrypoints=websecure
       - traefik.http.routers.bitbucket-ssl.rule=Host(`bitbucket.fires.division`)
-      - traefik.http.routers.bitbucket-ssl.tls=true
+      #- traefik.http.routers.bitbucket-ssl.tls=true
       - traefik.http.services.bitbucket.loadbalancer.server.port=7990
     ports:
       - "7999:7999"
@@ -158,7 +163,7 @@ services:
       #- traefik.http.routers.jenkins.rule=Host(`jenkins.fires.division`)
       - traefik.http.routers.jenkins-ssl.entrypoints=websecure
       - traefik.http.routers.jenkins-ssl.rule=Host(`jenkins.fires.division`)
-      - traefik.http.routers.jenkins-ssl.tls=true
+      #- traefik.http.routers.jenkins-ssl.tls=true
       - traefik.http.services.jenkins.loadbalancer.server.port=8080
     volumes:
       - jenkins:/var/jenkins_home
@@ -175,7 +180,7 @@ services:
       #- traefik.http.routers.nexus.rule=Host(`nexus.fires.division`)
       - traefik.http.routers.nexus-ssl.entrypoints=websecure
       - traefik.http.routers.nexus-ssl.rule=Host(`nexus.fires.division`)
-      - traefik.http.routers.nexus-ssl.tls=true
+      #- traefik.http.routers.nexus-ssl.tls=true
       - traefik.http.services.nexus.loadbalancer.server.port=8081
     volumes:
       - nexus:/nexus-data
