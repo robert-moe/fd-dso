@@ -1,0 +1,22 @@
+## JAVA 8
+keytool -importcert -alias <server_name> -keystore <JAVA_HOME>/jre/lib/security/cacerts -file public.crt
+
+## JAVA 11
+keytool -importcert -alias <server_name> -keystore <JAVA_HOME>/lib/security/cacerts -file public.crt
+keytool -importcert -alias jira.fires.division -keystore /opt/java/openjdk/lib/security/cacerts -file jira.fires.division.crt
+
+
+## CONTAINERS
+You will need to docker exec into each atlassican container and push the correct 'server' cert into the java cacert file.  This will
+allow java to trust the self signed cert.
+
+TODO: Look into possibly mounting the cacert to a volume that always has the correct certs loaded.  This is because each time the cantainer 
+is recreated, the cacerts are reset back to the original image.
+
+### LOCAL WORKSTATION
+#In order for MVN to use Nexus.  You must copy the self signed nexus certificate into the local java cacerts.
+
+Need to configure NPM to ingore SSL error
+npm config set strict-ssl=false
+
+TODO: Investigate way add/point NPM to cacert certificate store

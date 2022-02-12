@@ -1,0 +1,8 @@
+docker build --add-host=nexus.fires.division:192.168.147.1 --network='Default Switch' -t jadocsbuild:2020v2 -m 20GB .
+ 
+
+docker run --storage-opt size=30G -it --memory="5g" jadocsbuild:2020v2
+docker run --storage-opt size=30G -it --mac-address="CC-48-3A-4A-ED-3C" --memory="5g" -v C:\Source\2_0_integration:C:\Source\2_0_integration jadocsbuild:2020v2
+
+ $wc  New-Object System.Net.WebClient;
+ $wc.DownloadFile("https://xxxxx.xxx/file.zip", C:\xxxxx\file.zip)

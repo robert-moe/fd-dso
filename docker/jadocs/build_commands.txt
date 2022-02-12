@@ -1,0 +1,3 @@
+# Build JADOCS 2.0.2.0 - Skip NPM Depdency when off-line
+# !!!! MUST RUN NPM CI --verbose in HznReact BEFORE launching build in order to populate node_modules folder !!!!
+ant build-release -Dskip-update-deps=true
