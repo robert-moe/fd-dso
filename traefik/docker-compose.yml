@@ -179,9 +179,22 @@ services:
       #- traefik.http.routers.nexus.entrypoints=web
       #- traefik.http.routers.nexus.rule=Host(`nexus.fires.division`)
       - traefik.http.routers.nexus-ssl.entrypoints=websecure
+      - traefik.http.routers.nexus-ssl.service=nexus-ssl
       - traefik.http.routers.nexus-ssl.rule=Host(`nexus.fires.division`)
       #- traefik.http.routers.nexus-ssl.tls=true
-      - traefik.http.services.nexus.loadbalancer.server.port=8081
+      - traefik.http.services.nexus-ssl.loadbalancer.server.port=8081
+      # NEXUS REPO
+      - traefik.http.routers.nexus-docker.entrypoints=websecure
+      - traefik.http.routers.nexus-docker.service=nexus-docker
+      - traefik.http.routers.nexus-docker.rule=Host(`repo.fires.division`)
+      #- traefik.http.routers.nexus-docker.tls=true
+      - traefik.http.services.nexus-docker.loadbalancer.server.port=9000
+      # NEXUS REGISTRY
+      - traefik.http.routers.nexus-registry-1.entrypoints=websecure
+      - traefik.http.routers.nexus-registry-1.service=nexus-registry-1
+      - traefik.http.routers.nexus-registry-1.rule=Host(`registry-1.fires.division`)
+      #- traefik.http.routers.nexus-docker.tls=true
+      - traefik.http.services.nexus-registry-1.loadbalancer.server.port=9002
     volumes:
       - nexus:/nexus-data
     networks:
