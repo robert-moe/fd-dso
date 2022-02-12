@@ -93,7 +93,7 @@ services:
       #ATL_TOMCAT_SCHEME: http 
       ATL_PROXY_PORT: 8443
       ATL_TOMCAT_SCHEME: https
-      ATL_TOMCAT_SECURE: false
+      ATL_TOMCAT_SECURE: 'false'
     networks:
       - traefik-proxy
     depends_on:
@@ -119,7 +119,7 @@ services:
       #ATL_TOMCAT_SCHEME: http
       ATL_PROXY_PORT: 8443
       ATL_TOMCAT_SCHEME: https
-      ATL_TOMCAT_SECURE: "true"
+      ATL_TOMCAT_SECURE: 'false'
     networks:
       - traefik-proxy
     depends_on:
@@ -147,7 +147,7 @@ services:
       #SERVER_SCHEME: http 
       SERVER_PROXY_PORT: 8443
       SERVER_SCHEME: https
-      SERVER_SECURE: "true"
+      SERVER_SECURE: 'false'
     networks:
       - traefik-proxy
     depends_on:
