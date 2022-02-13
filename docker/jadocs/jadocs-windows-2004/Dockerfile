@@ -2,7 +2,7 @@
 # Use a specific tagged image. Tags can be changed, though that is unlikely for most images.
 # default base image
 #ARG BASE_REGISTRY=registry1.dso.mil
-ARG BASE_IMAGE=msbuildtools-windows-20h2
+ARG BASE_IMAGE=msbuildtools-windows-2004
 ARG BASE_TAG=16.7.4
 
 FROM ${BASE_IMAGE}:${BASE_TAG}
@@ -131,6 +131,3 @@ SHELL ["cmd", "/S", "/C"]
 # Add needed programs to path
 #RUN SETX /M PATH "%JAVA_HOME_64%\bin;%GIT_HOME%\bin;%ANT_HOME%\bin;%7ZIP_HOME%;%PG_HOME%\bin;%PATH%;"
 RUN SETX /M PATH "%JAVA_HOME_64%\bin;%GIT_HOME%\bin;%ANT_HOME%\bin;%7ZIP_HOME%;%PG_HOME%\bin;%PATH%;"
-
-
-

@@ -1,6 +1,6 @@
 # escape=`
 
-FROM repo.fires.division:8443/windows/servercore:2004
+FROM repo.fires.division:8443/windows/servercore:1909
 
 # Define Build Variables
 ARG SOFTWARE='C:/Software/'

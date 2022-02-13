@@ -1,1 +1,0 @@
-docker build --add-host=nexus.fires.division:192.168.147.1 --network='Default Switch' -t msbuildtools-windows-20H2:16.7.4 -m 20GB .
