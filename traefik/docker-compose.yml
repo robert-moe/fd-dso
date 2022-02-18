@@ -103,7 +103,7 @@ services:
       ATL_PROXY_NAME: jira.fires.division
       #ATL_PROXY_PORT: 8080
       #ATL_TOMCAT_SCHEME: http 
-      ATL_PROXY_PORT: 8443
+      ATL_PROXY_PORT: 443
       ATL_TOMCAT_SCHEME: https
       ATL_TOMCAT_SECURE: 'false'
     networks:
@@ -129,7 +129,7 @@ services:
       ATL_PROXY_NAME: confluence.fires.division
       #ATL_PROXY_PORT: 8080
       #ATL_TOMCAT_SCHEME: http
-      ATL_PROXY_PORT: 8443
+      ATL_PROXY_PORT: 443
       ATL_TOMCAT_SCHEME: https
       ATL_TOMCAT_SECURE: 'false'
     networks:
@@ -157,7 +157,7 @@ services:
       SERVER_PROXY_NAME: bitbucket.fires.division
       #SERVER_PROXY_PORT: 8080
       #SERVER_SCHEME: http 
-      SERVER_PROXY_PORT: 8443
+      SERVER_PROXY_PORT: 443
       SERVER_SCHEME: https
       SERVER_SECURE: 'false'
     networks:
