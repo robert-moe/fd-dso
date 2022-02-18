@@ -1,7 +1,9 @@
 docker build -t jadocs-windows-20h2:2020v1 -m 20GB .
 
+docker build -t jadocs-stresstest-1809:2020v1 -m 20GB --build-arg BASE_IMAGE=jadocs-windows-1809 --build-arg BASE_TAG=2020v1 .
+
 docker run --storage-opt size=30G -it --memory="5g" jadocs-windows-20h2:2020v1
 
-docker run -it --mac-address="CC-48-3A-4A-ED-3C" -v C:\Source\20h2\2_0_integration:C:\2_0_integration jadocs-windows-20h2:2020v1
+docker run -it --mac-address="CC-48-3A-4A-ED-3C" --memory="5g" repo.fires.division:8443/jadocs-stresstest-20h2:2020v1
 
 docker run --storage-opt size=30G -it --mac-address="CC-48-3A-4A-ED-3C" --memory="5g" -v C:\Source\20h2\2_0_integration:C:\2_0_integration jadocs-windows-20h2:2020v1

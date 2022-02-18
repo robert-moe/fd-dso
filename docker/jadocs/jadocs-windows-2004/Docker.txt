@@ -1,7 +1,0 @@
-docker build -t jadocs-windows-2004:2020v1 -m 20GB .
-
-docker run --storage-opt size=30G -it --memory="5g" jadocs-windows-2004:2020v1
-
-docker run -it --mac-address="CC-48-3A-4A-ED-3C" -v C:\Source\2004\2_0_integration:C:\2_0_integration jadocs-windows-2004:2020v1
-
-docker run --storage-opt size=30G -it --mac-address="CC-48-3A-4A-ED-3C" --memory="5g" -v C:\Source\2004\2_0_integration:C:\2_0_integration jadocs-windows-2004:2020v1

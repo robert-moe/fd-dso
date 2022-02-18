@@ -5,7 +5,7 @@
 ARG BASE_IMAGE=msbuildtools-windows-1909
 ARG BASE_TAG=16.7.4
 
-FROM ${BASE_IMAGE}:${BASE_TAG}
+FROM $BASE_IMAGE:$BASE_TAG
 
 # SHELL
 SHELL ["powershell", "-Command"]

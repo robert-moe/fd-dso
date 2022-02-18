@@ -16,12 +16,12 @@ services:
       - --api.insecure=true
       - --api.debug=true
       # Entrypoints
-      - --entrypoints.web.address=:8080
+      - --entrypoints.web.address=:80
       # Redirect ALL HTTP traffic to HTTPS
       - --entrypoints.web.http.redirections.entrypoint.to=websecure
       - --entrypoints.web.http.redirections.entrypoint.scheme=https
       - --entrypoints.web.http.redirections.entrypoint.permanent=true
-      - --entrypoints.websecure.address=:8443
+      - --entrypoints.websecure.address=:443
       - --entrypoints.websecure.http.tls=true
       - --entrypoints.traefik.address=:8081
       # Provider Info
@@ -43,21 +43,33 @@ services:
 
     ports:
       # The HTTP port
-      - "8080:8080"
+      - "80:80"
       # The Web UI (enabled by --api.insecure=true)
-      - "8081:8081" # The HTTPS port
-      - "8443:8443"
+      - "8081:8081" 
+      # The HTTPS port
+      - "443:443"
     volumes:
       - ./config/traefik:/etc/traefik
       # - ./config/certs:/config/certs
-
-
-
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - traefik-proxy
 
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:latest
+
+    ports:
+      - "8000:8000"
+      - "9000:9000"
+      - "9443:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer:/data
+    networks:
+      - traefik-proxy
+  
   nginx:
     container_name: nginx
     image: nginx:1.17
@@ -194,7 +206,7 @@ services:
       - traefik.http.routers.nexus-registry-1.service=nexus-registry-1
       - traefik.http.routers.nexus-registry-1.rule=Host(`registry-1.fires.division`)
       #- traefik.http.routers.nexus-docker.tls=true
-      - traefik.http.services.nexus-registry-1.loadbalancer.server.port=9002
+      - traefik.http.services.nexus-registry-1.loadbalancer.server.port=9050
     volumes:
       - nexus:/nexus-data
     networks:
@@ -227,4 +239,6 @@ volumes:
   postgres:
     external: true
   nexus:
+    external: true
+  portainer:
     external: true
