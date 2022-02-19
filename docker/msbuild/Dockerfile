@@ -1,12 +1,12 @@
 # escape=`
 
-ARG BASE_IMAGE=repo.fires.division:8443/windows
+ARG BASE_IMAGE=repo.fires.division/windows
 ARG BASE_TAG=1809
 
 FROM $BASE_IMAGE:$BASE_TAG
 
 # Define Build Variables
-ARG CI_REPO='https://nexus.fires.division:8443/repository/fd-binaries'
+ARG CI_REPO='https://nexus.fires.division/repository/fd-binaries'
 ARG BUILDTOOLS='VS_BuildTools_Offline_16.7.4.zip'
 
 ########################################################################################################
