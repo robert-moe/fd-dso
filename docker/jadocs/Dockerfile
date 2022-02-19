@@ -79,7 +79,7 @@ ARG INSTALLSHIELD='InstallShield2019R3StandaloneBuild.exe'
 RUN Write-Host "Downloading Installshield from CI Repo...."; `
     Invoke-WebRequest -URI "$ENV:CI_REPO/installshield/$ENV:INSTALLSHIELD" -OutFile "C:/$ENV:INSTALLSHIELD"; `
     Write-Host "Installing Installshield...."; `
-    $proc = Start-Process -FilePath "C:/$ENV:INSTALLSHIELD" -ArgumentList '/s /v\"INSTALLEVEL=101 SABCONTAINER=1 /qn\"' -Wait -Passthru -RedirectStandardError stderr.txt -RedirectStandardOutput stdout.txt; `
+    $proc = Start-Process -FilePath "C:/$ENV:INSTALLSHIELD" -ArgumentList '/s /v\"INSTALLEVEL=101 SABCONTAINER=1 /qn\"' -Wait -Passthru; `
     $proc.WaitforExit() ; `
     if($proc.ExitCode -ne 0) { `
         Write-Host "Exit Code: " $proc.ExitCode; `
