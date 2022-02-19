@@ -44,7 +44,7 @@ RUN Write-Host "Downloading MSBuildTools from CI Repo...."; `
     Start-Process -FilePath 'C:\VS_BuildTools_Offline_MIN\vs_buildtools__2019021076.1578939402.exe' -ArgumentList '--quiet --wait --norestart --installPath C:\BuildTool' -Wait; `
     Write-Host "Deleting MSBuildTools...."; `
     Remove-Item -Path C:\VS_BuildTools_Offline_MIN -Recurse | Out-Null; `
-    Remove-Item "C:/$ENV:BUILDTOOLS"
+    Remove-Item -Path "C:/$ENV:BUILDTOOLS"
 
 ENV MSBUILDDISABLENODEREUSE=1
 
