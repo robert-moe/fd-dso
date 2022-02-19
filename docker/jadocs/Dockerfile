@@ -106,7 +106,7 @@ RUN $DestinationFolderPath = 'C:/Program Files (x86)/Installshield/2019 SAB/Setu
 
 RUN $DestinationFolderPath = 'C:/Program Files (x86)/Installshield/2019 SAB/SetupPrerequisites'; `
     IF (!(Test-Path -Path $DestinationFolderPath)) {New-Item $DestinationFolderPath -Type Directory | Out-Null}; `
-    Invoke-WebRequest -URI "$ENV:CI_REPO/installshield/vcredist_x86.exe" -OutFile "$DestinationFolderPath/vcredist_x86.exe")
+    Invoke-WebRequest -URI "$ENV:CI_REPO/installshield/vcredist_x86.exe" -OutFile "$DestinationFolderPath/vcredist_x86.exe"
   
 RUN $DestinationFolderPath = 'C:/Program Files (x86)/Installshield/2019 SAB/SetupPrerequisites'; `
     IF (!(Test-Path -Path $DestinationFolderPath)) {New-Item $DestinationFolderPath -Type Directory | Out-Null}; `
