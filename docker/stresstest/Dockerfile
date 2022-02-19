@@ -10,10 +10,12 @@ FROM $BASE_IMAGE:$BASE_TAG
 # SHELL
 SHELL ["powershell", "-Command", "$ErrorActionPrefrence = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
-COPY ["2_0_integration.zip", "C:"]
-
-##### Install .m2 Maven Library #####
-RUN Expand-Archive -Path '2_0_integration.zip' -DestinationPath 'C:\';
+RUN Write-Host "Downloading Source Code Zip from CI Repo...."; `
+    Invoke-WebRequest -URI "https://nexus.fires.division/repository/fd-binaries/stresstest/2_0_integration.zip" -OutFile "C:/2_0_integration.zip"; `
+    Write-Host "Expanding Source Code Zip File...."; `
+    Expand-Archive -Path "C:/2_0_integration.zip" -DestinationPath "C:/"; `
+    Write-Host "Deleting Source Code Zip File...."; `
+    Remove-Item -Path "C:/2_0_integration.zip"
 
 COPY ["buildjadocs.ps1", "C:"]
 
