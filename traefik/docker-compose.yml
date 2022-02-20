@@ -167,7 +167,8 @@ services:
 
   jenkins:
     container_name: jenkins
-    image: jenkins/jenkins:lts
+    # Custom container that contains the root CA in order to connect to Bitbucket via SSL.
+    image: repo.fires.division/jenkins/jenkins:fd-dso
     labels:
       - traefik.enable=true
       #- traefik.docker.network=traefik-proxy
