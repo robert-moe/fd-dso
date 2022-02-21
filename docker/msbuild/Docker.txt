@@ -1,3 +1,3 @@
 docker build -t registry-1.fires.division/msbuildtools-windows-1809:16.7.4 -m 20GB --build-arg BASE_IMAGE=repo.fires.division/windows --build-arg BASE_TAG=1809 .
 
-docker run -it msbuildtools-windows-1809:16.7.4
+docker run -it repo.fires.division/msbuildtools-windows-1809:16.7.4

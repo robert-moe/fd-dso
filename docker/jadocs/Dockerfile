@@ -143,6 +143,7 @@ ENV PGPASSWORD='qwerQWER1234!@#$'
 # COPY oledlg.dll msvbvm60.dll glu32.dll opengl32.dll C:\Windows\SysWOW64\
 
 COPY ["Config/.jadocs.build.properties", "Config/.npmrc", "C:/Users/ContainerAdministrator/"]
+COPY ["Config/.gitconfig", "C:/Users/ContainerAdministrator/"]
 
 # Restore the default Windows shell for correct batch processing.
 SHELL ["cmd", "/S", "/C"]

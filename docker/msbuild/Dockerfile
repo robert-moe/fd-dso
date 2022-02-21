@@ -29,7 +29,17 @@ ARG BUILDTOOLS='VS_BuildTools_Offline_16.7.4.zip'
 SHELL ["powershell", "-Command", "$ErrorActionPrefrence = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
 # HACK because the --add-host=nexus.fires.division:192.168.148.128 rarely works, even with the --network="nat" option set.
-RUN Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`r`n192.168.148.128`t`tnexus.fires.division" -Force
+# HACK This is only needed for my local instance beacsue I do not have a DNS server avaiable.  Simply modifying the host file will do for now
+#  But is not a good solution to hardcode the IP address into the image.
+RUN Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`r`n192.168.148.128`t`tjira.fires.division" -Force; `
+    Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`r`n192.168.148.128`t`tbitbucket.fires.division" -Force; `
+    Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`r`n192.168.148.128`t`tconfluence.fires.division" -Force; `
+    Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`r`n192.168.148.128`t`tjenkins.fires.division" -Force; `
+    Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`r`n192.168.148.128`t`tnexus.fires.division" -Force; `
+    Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`r`n192.168.148.128`t`tnginx.fires.division" -Force; `
+    Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`r`n192.168.148.128`t`trepo.fires.division" -Force; `
+    Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`r`n192.168.148.128`t`tregistry-1.fires.division" -Force; `
+    Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`r`n192.168.148.128`t`tportainer.fires.division" -Force;
 
 # Install Root Fires Division DevSecOps Certificate
 COPY config\ca.crt C:\Certificates\
