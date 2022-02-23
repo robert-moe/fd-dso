@@ -1,6 +1,7 @@
 docker build -t jadocs-windows-1809:2020v1 -m 20GB .
 
 docker build -t registry-1.fires.division/jadocs-windows-1809:2020v1 -m 20GB --build-arg BASE_IMAGE=repo.fires.division/msbuildtools-windows-1809 --build-arg BASE_TAG=16.7.4 .
+docker build -t registry-1.fires.division/jadocs-servercore-1809:2020v1 -m 20GB --build-arg BASE_IMAGE=repo.fires.division/msbuildtools-servercore-1809 --build-arg BASE_TAG=16.7.4 .
 
 docker run -it --mac-address="CC-48-3A-4A-ED-3C" --memory="5g" repo.fires.division/jadocs-windows-1809:2020v1
 

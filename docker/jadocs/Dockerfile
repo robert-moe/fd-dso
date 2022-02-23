@@ -88,13 +88,13 @@ RUN Write-Host "Downloading Installshield from CI Repo...."; `
     }; `
     Write-Host "Deleting Installshield Installer...."; `
     Remove-Item "C:/$ENV:INSTALLSHIELD"
-# Restore the default Windows shell.
-#SHELL ["cmd", "/S", "/C"]
-#RUN C:\InstallShield2019R3StandaloneBuild.exe /s /v"INSTALLEVEL=101 SABCONTAINER=1 /qn"
-#SHELL ["powershell", "-Command"]
 
-## TODO: Copy these files for servercore
-## Oledlg.dll, msvbvm60.dll, glu32.dll, opengl32.dll, srpapi.dll
+#COPY oledlg.dll msvbvm60.dll glu32.dll opengl32.dll C:\Windows\SysWOW64\
+RUN $DestinationFolderPath = 'C:\Windows\SysWOW64\'; `
+    Invoke-WebRequest -URI "$ENV:CI_REPO/installshield/oledlg.dll" -OutFile "$DestinationFolderPath/oledlg.dll"; `
+    Invoke-WebRequest -URI "$ENV:CI_REPO/installshield/msvbvm60.dll" -OutFile "$DestinationFolderPath/msvbvm60.dll"; `
+    Invoke-WebRequest -URI "$ENV:CI_REPO/installshield/glu32.dll" -OutFile "$DestinationFolderPath/glu32.dll"; `
+    Invoke-WebRequest -URI "$ENV:CI_REPO/installshield/opengl32.dll" -OutFile "$DestinationFolderPath/opengl32.dll"; 
 
 RUN $DestinationFolderPath = 'C:/Program Files (x86)/Installshield/2019 SAB/SetupPrerequisites/MSXML 6.0 SP1/x64/'; `
     IF (!(Test-Path -Path $DestinationFolderPath)) {New-Item $DestinationFolderPath -Type Directory | Out-Null}; `
@@ -105,13 +105,9 @@ RUN $DestinationFolderPath = 'C:/Program Files (x86)/Installshield/2019 SAB/Setu
     Invoke-WebRequest -URI "$ENV:CI_REPO/installshield/msxml6_x86.msi" -OutFile "$DestinationFolderPath/msxml6_x86.msi" 
 
 RUN $DestinationFolderPath = 'C:/Program Files (x86)/Installshield/2019 SAB/SetupPrerequisites'; `
-    IF (!(Test-Path -Path $DestinationFolderPath)) {New-Item $DestinationFolderPath -Type Directory | Out-Null}; `
-    Invoke-WebRequest -URI "$ENV:CI_REPO/installshield/vcredist_x86.exe" -OutFile "$DestinationFolderPath/vcredist_x86.exe"
-  
-RUN $DestinationFolderPath = 'C:/Program Files (x86)/Installshield/2019 SAB/SetupPrerequisites'; `
-    IF (!(Test-Path -Path $DestinationFolderPath)) {New-Item $DestinationFolderPath -Type Directory | Out-Null}; `
-    Invoke-WebRequest -URI "$ENV:CI_REPO/installshield/vs2012_redist.prq" -OutFile "$DestinationFolderPath/vs2012_redist.prq"
-
+    Invoke-WebRequest -URI "$ENV:CI_REPO/installshield/vcredist_x86.exe" -OutFile "$DestinationFolderPath/vcredist_x86.exe"; `
+    Invoke-WebRequest -URI "$ENV:CI_REPO/installshield/vs2012_redist.prq" -OutFile "$DestinationFolderPath/vs2012_redist.prq"  
+   
 COPY ["Config/License.lic", "C:/Program Files (x86)/Installshield/2019 SAB/System/"]
 
 ##### Install Node #####
@@ -137,7 +133,7 @@ ENV GIT_HOME="C:\Git-2.21.0-64-bit"
 ENV ANT_HOME="C:\apache-ant-1.9.4"
 ENV 7ZIP_HOME="C:\7-zip"
 ENV PG_HOME="C:\Postgres\13"
-ENV NPM_CONFIG_REGISTRY="https://nexus.fires.division:8443/repository/fd-npm"
+ENV NPM_CONFIG_REGISTRY="https://nexus.fires.division/repository/fd-npm"
 ENV PGPASSWORD='qwerQWER1234!@#$'
 
 # COPY oledlg.dll msvbvm60.dll glu32.dll opengl32.dll C:\Windows\SysWOW64\
