@@ -9,14 +9,13 @@ FROM jenkins/jenkins:lts
 
 USER root
 
-COPY config/ca.crt $JAVA_HOME/lib/security
+COPY config/ca.crt /
 
-RUN cd $JAVA_HOME/lib/security `
-    && keytool -keystore cacerts -storepass changeit -noprompt -trustcacerts -importcert -alias fddso -file ca.crt
+RUN keytool -keystore -cacerts -storepass changeit -noprompt -trustcacerts -importcert -alias fddso -file /ca.crt
 
-RUN cp $JAVA_HOME/lib/security/ca.crt /usr/local/share/ca-certificates/ca.crt `
+RUN cp /ca.crt /usr/local/share/ca-certificates/ca.crt `
     &&  update-ca-certificates
 
+COPY config/.gitconfig /var/jenkins_home
+
 USER jenkins
-
-

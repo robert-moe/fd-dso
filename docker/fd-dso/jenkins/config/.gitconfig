@@ -1,0 +1,2 @@
+[http "https://bitbucket.fires.division"]
+   sslCAInfo=/ca.crt

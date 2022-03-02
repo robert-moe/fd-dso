@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+
+  agent-1:
+    container_name: agent-1
+    image: repo.fires.division/jadocs-jenkinsagent:2020v1
+    environment:
+       JENKINS_URL: https://jenkins.fires.division/
+       JENKINS_SECRET: b481841f0ee8d7c340fe3cc0dd0ad938723ae3d527a84ea350ce68ad243a0fda 
+       JENKINS_AGENT_NAME: jadocs-build-1
+       JENKINS_WEB_SOCKET: "true"
+    volumes:
+      - agent1:C:\workspace
+    networks:
+      - jadocs-build
+
+  agent-2:
+    container_name: agent-2
+    image: repo.fires.division/jadocs-jenkinsagent:2020v1
+    environment:
+       JENKINS_URL: https://jenkins.fires.division/
+       JENKINS_SECRET: 97eb76cea523ab71fb124c0f1af9c982726c12231f6c57e66f43f7ec036555a0 
+       JENKINS_AGENT_NAME: jadocs-build-2
+       JENKINS_WEB_SOCKET: "true"
+    volumes:
+      - agent2:C:\workspace
+    networks:
+      - jadocs-build
+
+networks:
+  jadocs-build:
+
+volumes:
+  agent1:
+  agent2:

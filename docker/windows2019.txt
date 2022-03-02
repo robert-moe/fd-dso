@@ -1,0 +1,1 @@
+Invoke-WebRequest "https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-Windows-x86_64.exe" -UseBasicParsing -OutFile $Env:ProgramFiles\Docker\docker-compose.exe
