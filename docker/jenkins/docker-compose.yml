@@ -11,7 +11,7 @@ services:
        JENKINS_AGENT_NAME: jadocs-build-1
        JENKINS_WEB_SOCKET: "true"
     volumes:
-      - agent1:C:\workspace
+      - agent1:C:\jenkins
     networks:
       - jadocs-build
 
@@ -24,13 +24,27 @@ services:
        JENKINS_AGENT_NAME: jadocs-build-2
        JENKINS_WEB_SOCKET: "true"
     volumes:
-      - agent2:C:\workspace
+      - agent2:C:\jenkins
     networks:
       - jadocs-build
 
+  agent-3:
+    container_name: agent-3
+    image: repo.fires.division/jadocs-jenkinsagent:2020v1
+    environment:
+       JENKINS_URL: https://jenkins.fires.division/
+       JENKINS_SECRET: dbd3e3166ea814aee034c177185b6d02333de4fe998cca63b7473828341e0967 
+       JENKINS_AGENT_NAME: jadocs-build-3
+       JENKINS_WEB_SOCKET: "true"
+    volumes:
+      - agent3:C:\jenkins
+    networks:
+      - jadocs-build
+      
 networks:
   jadocs-build:
 
 volumes:
   agent1:
   agent2:
+  agent3:

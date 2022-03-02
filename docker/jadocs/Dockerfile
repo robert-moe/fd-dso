@@ -13,67 +13,6 @@ SHELL ["powershell", "-Command", "$ErrorActionPrefrence = 'Stop'; $ProgressPrefe
 # Define Build Variables
 ARG CI_REPO='https://nexus.fires.division/repository/fd-binaries'
 
-##### Install JAVA #####
-ARG JAVA='jdk-8u321-windows-x64.zip'
-RUN Write-Host "Downloading Java from CI Repo...."; `
-    Invoke-WebRequest -URI "$ENV:CI_REPO/java/$ENV:JAVA" -OutFile "C:/$ENV:JAVA"; `
-    Write-Host "Expanding Java Zip File...."; `
-    Expand-Archive -Path "C:/$ENV:JAVA" -DestinationPath "C:/"; `
-    Write-Host "Deleting Java Zip File...."; `
-    Remove-Item -Path "C:/$ENV:JAVA"
-
-##### Install 7-Zip #####
-ARG 7ZIP='7-zip.zip'
-RUN Write-Host "Downloading 7Zip from CI Repo...."; `
-    Invoke-WebRequest -URI "$ENV:CI_REPO/7zip/$ENV:7ZIP" -OutFile "C:/$ENV:7ZIP"; `
-    Write-Host "Expanding 7Zip Zip File...."; `
-    Expand-Archive -Path "C:/$ENV:7ZIP" -DestinationPath "C:/"; `
-    Write-Host "Deleting 7Zip Zip File...."; `
-    Remove-Item -Path "C:/$ENV:7ZIP"
-
-##### Install GIT #####
-ARG GIT='Git-2.21.0-64-bit.zip'
-RUN Write-Host "Downloading Git from CI Repo...."; `
-    Invoke-WebRequest -URI "$ENV:CI_REPO/git/$ENV:GIT" -OutFile "C:/$ENV:GIT"; ` 
-    Write-Host "Expanding Git Zip File...."; `
-    Expand-Archive -Path "C:/$ENV:GIT" -DestinationPath "C:/"; `
-    Write-Host "Deleting Git Zip File...."; `
-    Remove-Item "C:/$ENV:GIT"
-
-##### Install ANT #####
-ARG ANT='apache-ant-1.9.4-bin-mod.zip'
-RUN Write-Host "Downloading Ant from CI Repo...."; `
-    Invoke-WebRequest -URI "$ENV:CI_REPO/ant/$ENV:ANT" -OutFile "C:/$ENV:ANT"; `
-    Write-Host "Expanding Ant Zip File...."; `
-    Expand-Archive -Path "C:/$ENV:ANT" -DestinationPath "C:/"; `
-    Write-Host "Deleting Ant Zip File...."; `
-    Remove-Item "C:/$ENV:ANT"
-
-##### Install .m2 Maven Library #####
-## TODO: Remove this option and always pull from nexus repo during build.
-ARG M2ZIP='.m2.zip'
-RUN Write-Host "Downloading M2 from CI Repo...."; `
-    Invoke-WebRequest -URI "$ENV:CI_REPO/maven/.m2.zip" -OutFile "C:/.m2.zip"; `
-    Write-Host "Expanding M2 Zip File...."; `
-    Expand-Archive -Path "C:/$ENV:M2ZIP" -DestinationPath "C:/Users/ContainerAdministrator/"; `
-    Write-Host "Deleting M2 Zip File...."; `
-    Remove-Item "C:/$ENV:M2ZIP
-
-##### Install Postgres #####
-ARG POSTGRES='postgresql-13.4-1-windows-x64.exe'
-RUN Write-Host "Downloading Postgres from CI Repo...."; `
-    Invoke-WebRequest -URI "$ENV:CI_REPO/postgres/$ENV:POSTGRES" -OutFile "C:/$ENV:POSTGRES"; `
-    Write-Host "Installing Postgres...."; `
-    $proc = Start-Process -FilePath "C:/$ENV:POSTGRES" -ArgumentList '--mode unattended --unattendedmodeui none --datadir C:\Postgres\13\data --prefix C:\Postgres\13 --superpassword qwerQWER1234!@#$ --serverport 5432' -Wait -Passthru;`
-    $proc.WaitforExit() ; `
-    if($proc.ExitCode -ne 0) { `
-        Write-Host "Exit Code: " + $proc.ExitCode; `
-        Write-Host 'FAIED Installing Postgres'; `
-        exit 1; `
-    }; `
-    Write-Host "Deleting Postgres Installer...."; `
-    Remove-Item "C:/$ENV:POSTGRES"
-
 ##### Install Installshield #####
 ARG INSTALLSHIELD='InstallShield2019R3StandaloneBuild.exe'
 RUN Write-Host "Downloading Installshield from CI Repo...."; `
@@ -107,8 +46,62 @@ RUN $DestinationFolderPath = 'C:/Program Files (x86)/Installshield/2019 SAB/Setu
 RUN $DestinationFolderPath = 'C:/Program Files (x86)/Installshield/2019 SAB/SetupPrerequisites'; `
     Invoke-WebRequest -URI "$ENV:CI_REPO/installshield/vcredist_x86.exe" -OutFile "$DestinationFolderPath/vcredist_x86.exe"; `
     Invoke-WebRequest -URI "$ENV:CI_REPO/installshield/vs2012_redist.prq" -OutFile "$DestinationFolderPath/vs2012_redist.prq"  
-   
+
+## TODO:  Think about making this a required volume map in order to prevent 'baking' in the licence file.  This will allow 
+##        the user to provide thier own licence tied to a specifc MAC address, or Remote Licence Server.
 COPY ["Config/License.lic", "C:/Program Files (x86)/Installshield/2019 SAB/System/"]
+
+##### Install 7-Zip #####
+ARG 7ZIP='7-zip.zip'
+RUN Write-Host "Downloading 7Zip from CI Repo...."; `
+    Invoke-WebRequest -URI "$ENV:CI_REPO/7zip/$ENV:7ZIP" -OutFile "C:/$ENV:7ZIP"; `
+    Write-Host "Expanding 7Zip Zip File...."; `
+    Expand-Archive -Path "C:/$ENV:7ZIP" -DestinationPath "C:/"; `
+    Write-Host "Deleting 7Zip Zip File...."; `
+    Remove-Item -Path "C:/$ENV:7ZIP"
+
+##### Install ANT #####
+ARG ANT='apache-ant-1.9.4-bin-mod.zip'
+RUN Write-Host "Downloading Ant from CI Repo...."; `
+    Invoke-WebRequest -URI "$ENV:CI_REPO/ant/$ENV:ANT" -OutFile "C:/$ENV:ANT"; `
+    Write-Host "Expanding Ant Zip File...."; `
+    Expand-Archive -Path "C:/$ENV:ANT" -DestinationPath "C:/"; `
+    Write-Host "Deleting Ant Zip File...."; `
+    Remove-Item "C:/$ENV:ANT"
+
+##### Install .m2 Maven Library #####
+## TODO: Remove this option and always pull from nexus repo during build.
+#ARG M2ZIP='.m2.zip'
+#RUN Write-Host "Downloading M2 from CI Repo...."; `
+#    Invoke-WebRequest -URI "$ENV:CI_REPO/maven/.m2.zip" -OutFile "C:/.m2.zip"; `
+#    Write-Host "Expanding M2 Zip File...."; `
+#    Expand-Archive -Path "C:/$ENV:M2ZIP" -DestinationPath "C:/Users/ContainerAdministrator/"; `
+#    Write-Host "Deleting M2 Zip File...."; `
+#    Remove-Item "C:/$ENV:M2ZIP
+
+##### Install Postgres #####
+ARG POSTGRES='postgresql-13.4-1-windows-x64.exe'
+RUN Write-Host "Downloading Postgres from CI Repo...."; `
+    Invoke-WebRequest -URI "$ENV:CI_REPO/postgres/$ENV:POSTGRES" -OutFile "C:/$ENV:POSTGRES"; `
+    Write-Host "Installing Postgres...."; `
+    $proc = Start-Process -FilePath "C:/$ENV:POSTGRES" -ArgumentList '--mode unattended --unattendedmodeui none --datadir C:\Postgres\13\data --prefix C:\Postgres\13 --superpassword qwerQWER1234!@#$ --serverport 5432' -Wait -Passthru;`
+    $proc.WaitforExit() ; `
+    if($proc.ExitCode -ne 0) { `
+        Write-Host "Exit Code: " + $proc.ExitCode; `
+        Write-Host 'FAIED Installing Postgres'; `
+        exit 1; `
+    }; `
+    Write-Host "Deleting Postgres Installer...."; `
+    Remove-Item "C:/$ENV:POSTGRES"
+
+##### Install GIT #####
+ARG GIT='Git-2.21.0-64-bit.zip'
+RUN Write-Host "Downloading Git from CI Repo...."; `
+    Invoke-WebRequest -URI "$ENV:CI_REPO/git/$ENV:GIT" -OutFile "C:/$ENV:GIT"; ` 
+    Write-Host "Expanding Git Zip File...."; `
+    Expand-Archive -Path "C:/$ENV:GIT" -DestinationPath "C:/"; `
+    Write-Host "Deleting Git Zip File...."; `
+    Remove-Item "C:/$ENV:GIT"
 
 ##### Install Node #####
 ARG NODE='node-v16.13.2-x64.msi'
@@ -125,8 +118,18 @@ RUN Write-Host "Downloading Node from CI Repo...."; `
     Write-Host "Deleting Node Installer...."; `
     Remove-Item "C:\$ENV:NODE";
 
+##### Install JAVA #####
+ARG JAVA='jdk-8u321-windows-x64.zip'
+RUN Write-Host "Downloading Java from CI Repo...."; `
+    Invoke-WebRequest -URI "$ENV:CI_REPO/java/$ENV:JAVA" -OutFile "C:/$ENV:JAVA"; `
+    Write-Host "Expanding Java Zip File...."; `
+    Expand-Archive -Path "C:/$ENV:JAVA" -DestinationPath "C:/"; `
+    Write-Host "Deleting Java Zip File...."; `
+    Remove-Item -Path "C:/$ENV:JAVA"
+
 ##### Set environment variables #####
 ## TODO: Somehow tie them to the ARG values for the filenames
+## TODO: Refactor so this is just 1 layer
 ENV JAVA_HOME="C:\jdk1.8.0_321"
 ENV JAVA_HOME_64="C:\jdk1.8.0_321"
 ENV GIT_HOME="C:\Git-2.21.0-64-bit"
@@ -136,10 +139,9 @@ ENV PG_HOME="C:\Postgres\13"
 ENV NPM_CONFIG_REGISTRY="https://nexus.fires.division/repository/fd-npm"
 ENV PGPASSWORD='qwerQWER1234!@#$'
 
-# COPY oledlg.dll msvbvm60.dll glu32.dll opengl32.dll C:\Windows\SysWOW64\
-
 COPY ["Config/.jadocs.build.properties", "Config/.npmrc", "C:/Users/ContainerAdministrator/"]
 COPY ["Config/.gitconfig", "C:/Users/ContainerAdministrator/"]
+COPY ["Config/settings.xml", "C:/Users/ContainerAdministrator/.m2"]
 
 # Restore the default Windows shell for correct batch processing.
 SHELL ["cmd", "/S", "/C"]
@@ -147,3 +149,6 @@ SHELL ["cmd", "/S", "/C"]
 # Add needed programs to path
 #RUN SETX /M PATH "%JAVA_HOME_64%\bin;%GIT_HOME%\bin;%ANT_HOME%\bin;%7ZIP_HOME%;%PG_HOME%\bin;%PATH%;"
 RUN SETX /M PATH "%JAVA_HOME%\bin;%JAVA_HOME_64%\bin;%GIT_HOME%\bin;%ANT_HOME%\bin;%7ZIP_HOME%;%PG_HOME%\bin;%PATH%;"
+
+## Install the Root Certificate into the JAVA JDK
+RUN keytool -keystore %JAVA_HOME%\jre\lib\security\cacerts -storepass changeit -noprompt -trustcacerts -importcert -alias fddso1 -file C:\Certificates\ca.crt

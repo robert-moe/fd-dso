@@ -41,7 +41,7 @@ RUN Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`r`n192.168
     Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`r`n192.168.148.128`t`tregistry-1.fires.division" -Force; `
     Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`r`n192.168.148.128`t`tportainer.fires.division" -Force;
 
-# Install Root Fires Division DevSecOps Certificate
+# Install Root Fires Division DevSecOps Certificate into the OS
 COPY config\ca.crt C:\Certificates\
 RUN Import-Certificate -FilePath C:\Certificates\ca.crt -CertStoreLocation cert:\LocalMachine\Root | Out-Null
 

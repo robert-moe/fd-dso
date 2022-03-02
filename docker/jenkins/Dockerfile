@@ -23,10 +23,12 @@ RUN net accounts /maxpwage:unlimited ; `
     Set-LocalUser -Name $env:user -PasswordNeverExpires 1; `
     New-Item -ItemType Directory -Path C:/ProgramData/Jenkins | Out-Null
 
+## TRY MAKING THIS TWO DISTINCT AREAS
+## C:\Jenkins\Workspace for WORKDIR
+## C:\Users\Jenkins\.jenkins for ROOT
+## WILL NEED TWO DIFFERENT VOLUMES.  NOT IDEAL.
 ARG AGENT_ROOT=C:/Users/$user
-ARG AGENT_WORKDIR=${AGENT_ROOT}/Work
-
-ENV AGENT_WORKDIR=${AGENT_WORKDIR}
+ARG AGENT_WORKDIR=C:/Jenkins
 
 # Get the Agent from the Jenkins Artifacts Repository
 ARG VERSION=4.12
@@ -42,14 +44,13 @@ USER $user
 RUN New-Item -Type Directory $('{0}/.jenkins' -f $env:AGENT_ROOT) | Out-Null ; `
     New-Item -Type Directory $env:AGENT_WORKDIR | Out-Null
 
-VOLUME ${AGENT_ROOT}/.jenkins
-VOLUME ${AGENT_WORKDIR}
+#VOLUME ${AGENT_ROOT}/.jenkins
+#VOLUME ${AGENT_WORKDIR}
+
 WORKDIR ${AGENT_ROOT}
 
-RUN keytool -keystore $ENV:JAVA_HOME\jre\lib\security\cacerts -storepass changeit -noprompt -trustcacerts -importcert -alias fddso1 -file C:\Certificates\ca.crt
-
-COPY jenkins-agent.ps1 C:/ProgramData/Jenkins
-
+COPY Config/jenkins-agent.ps1 C:/ProgramData/Jenkins
+COPY Config/settings.xml C:/Users/Jenkins/.m2
 COPY ["Config/.jadocs.build.properties", "Config/.npmrc", "Config/.gitconfig", "C:/Users/Jenkins/"]
 
 USER ${user}
