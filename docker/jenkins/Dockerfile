@@ -42,15 +42,16 @@ RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tl
 USER $user
 
 RUN New-Item -Type Directory $('{0}/.jenkins' -f $env:AGENT_ROOT) | Out-Null ; `
-    New-Item -Type Directory $env:AGENT_WORKDIR | Out-Null
+    New-Item -Type Directory $env:AGENT_WORKDIR | Out-Null ; `
+    New-Item -Type Directory $('{0}/.m2' -f $env:AGENT_ROOT) | Out-Null
 
 #VOLUME ${AGENT_ROOT}/.jenkins
 #VOLUME ${AGENT_WORKDIR}
 
 WORKDIR ${AGENT_ROOT}
 
-COPY Config/jenkins-agent.ps1 C:/ProgramData/Jenkins
-COPY Config/settings.xml C:/Users/Jenkins/.m2
+COPY ["Config/jenkins-agent.ps1", "C:/ProgramData/Jenkins"]
+COPY ["Config/settings.xml", "C:/Users/Jenkins/.m2"]
 COPY ["Config/.jadocs.build.properties", "Config/.npmrc", "Config/.gitconfig", "C:/Users/Jenkins/"]
 
 USER ${user}

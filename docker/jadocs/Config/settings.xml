@@ -4,7 +4,7 @@
       <!--This sends everything else to /public -->
       <id>nexus</id>
       <mirrorOf>*</mirrorOf>
-      <url>https://nexus.fires.division/repository/maven-proxy/</url>
+      <url>https://nexus.fires.division/repository/fd-maven/</url>
     </mirror>
   </mirrors>
   <profiles>
